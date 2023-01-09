@@ -1,0 +1,35 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+    <div class="col d-flex justify-content-center">
+        <div class="row d-flex justify-content-center" style="width: 50%">
+            <form method="post" action="{% url 'login' %}" style="max-width: 28rem;">
+            <h1 class="h1 mb-4" style="color: black">用户登录</h1>
+                {% csrf_token %}
+                <div class="form-floating my-4">
+                    <input class="form-control" id="username" type="text" name="username" placeholder="用户名">
+                    <label for="password">用户名</label>
+                </div>
+                <div class="form-floating my-4">
+                    <input class="form-control" id="password" type="password" name="password" placeholder="密码">
+                    <label for="password">密码</label>
+                </div>
+                {% if form.errors %}
+                    <p>Your username and password didn't match. Please try again.</p>
+                {% endif %}
+
+                {% if next %}
+                    {% if user.is_authenticated %}
+                        <p class="text-danger">您的帐号无权访问这个页面</p>
+                    {% else %}
+                        <p class="text-danger">请登录以查看此页面</p>
+                    {% endif %}
+                {% endif %}
+                <button type="submit" class="w-100 btn btn-primary btn-block mb-4" value="login"> 登录 </button>
+                <input type="hidden" name="next" value="{{ next }}" />
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

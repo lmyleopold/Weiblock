@@ -1,0 +1,366 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <style>
+
+        .btn-yellow {
+            color: #ffffff;
+            background-color: #FFA600;
+            border-color: #FFA600;
+        }
+
+        .btn-yellow:hover,
+        .btn-yellow:focus,
+        .btn-yellow:active,
+        .btn-yellow.active,
+        .open .dropdown-toggle.btn-yellow {
+            color: #ffffff;
+            background-color: #FFc600;
+            border-color: #FFA600;
+        }
+
+        .btn-yellow:active,
+        .btn-yellow.active,
+        .open .dropdown-toggle.btn-yellow {
+            background-image: none;
+        }
+
+        .btn-yellow.disabled,
+        .btn-yellow[disabled],
+        fieldset[disabled] .btn-yellow,
+        .btn-yellow.disabled:hover,
+        .btn-yellow[disabled]:hover,
+        fieldset[disabled] .btn-yellow:hover,
+        .btn-yellow.disabled:focus,
+        .btn-yellow[disabled]:focus,
+        fieldset[disabled] .btn-yellow:focus,
+        .btn-yellow.disabled:active,
+        .btn-yellow[disabled]:active,
+        fieldset[disabled] .btn-yellow:active,
+        .btn-yellow.disabled.active,
+        .btn-yellow[disabled].active,
+        fieldset[disabled] .btn-yellow.active {
+            background-color: #FFA600;
+            border-color: #FFA600;
+        }
+
+        .btn-yellow .badge {
+            color: #FFA600;
+            background-color: #ffffff;
+        }
+    </style>
+    <!-- Main -->
+    <div id="main" class="col d-flex justify-content-center">
+        <div class="row my-auto shadow-lg border rounded" style="width: 80%">
+            <div id="pointmap" class="border" style="height: 800px; background-color: rgba(255,255,255,0.8);">
+                <div class="wrapper"></div>
+            </div>
+            <div class="d-flex justify-content-center" style="background-color: rgba(255,255,255,0.6)">
+                <button class="btn btn-yellow m-4" id="button1">
+                    <span class="text-white">显示下一轮</span>
+                </button>
+                <button class="btn btn-yellow m-4" id="button2">
+                    <span class="text-white">自动播放</span>
+                </button>
+                <button class="btn btn-yellow m-4" id="button3">
+                    <span class="text-white">停止自动播放</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+    <script>
+
+        let point = echarts.init(document.getElementById('pointmap'));
+        var data = [
+            {
+                name: "0",
+                fixed: true,
+                x: point.getWidth() / 2,
+                y: point.getHeight() / 2,
+                symbolSize: 40,
+                id: '0',
+            }
+        ];
+        const edges = [];
+        option = {
+            tooltip: {//提示框组件
+                trigger: 'item', //item数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。
+                axisPointer: {
+                    // 坐标轴指示器，坐标轴触发有效
+                    // type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                },
+                formatter: '{c}' //{a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）
+            },
+            series: [
+                {
+                    type: 'graph',
+                    layout: 'force',
+                    animation: false,
+                    data: data,
+                    force: {
+                        // initLayout: 'circular'
+                        gravity:  0.1,
+                        repulsion: 1500,
+                        edgeLength: 50,
+                        layoutAnimation:false//加上后无动画效果
+                    },
+                    edges: edges
+                }
+            ]
+        };
+        point.setOption(option);
+        // point.on('click', function (params) {
+        //         {
+        //             console.log(params);
+        //         }
+        //     });
+        // let points = JSON.parse('{{points|safe}}');
+        let ids = {{ids|safe}};
+        let relations = {{relations|safe}};
+        ids =  Array.from(new Set(ids));
+        let  j=0;
+        let points = {{points|safe}};
+        for (each of points)
+        {
+            data.push({
+                name: each[0],
+                symbolSize: 20,
+                itemStyle: {
+                    normal: {
+                        color: '#808080',
+                        label: {
+                            color: '#000', //字的颜色
+                            // borderColor: '#52ff18',  //拐点边框颜色
+                            // show: true  //设置这个就会把值显示在图表上
+                        }
+                    }
+                }
+            });
+        }
+
+        // let color = 'rgb(239,50,70)';
+        // while(1) {
+        //
+        //     if (j == ids.length) {
+        //         break;
+        //     }
+        //
+        //     for (; j < ids.length; j++) {
+        //         if(ids[j].length==0)
+        //         {
+        //             j++;
+        //             break;
+        //         }
+        //         data.push({
+        //             name: ids[j][0],
+        //             symbolSize: 20,
+        //             itemStyle: {
+        //                 normal: {
+        //                     color: '#808080',
+        //                     label: {
+        //                         color: '#000', //字的颜色
+        //                         // borderColor: '#52ff18',  //拐点边框颜色
+        //                         // show: true  //设置这个就会把值显示在图表上
+        //                     }
+        //                 }
+        //             }
+        //         });
+        //     }
+        // }
+        // for(let i of ids)
+        // {
+        //     data.push({name:i,});
+        // }
+        console.log(data);
+        for(let i of relations)
+        {
+            let source = i[0];
+            let target = i[1];
+            if (source !== target) {
+                edges.push({
+                    source: source,
+                    target: target
+                });
+            }
+        }
+        // for (let i = 0; i < ids.length; i++) {
+        //     data.push({
+        //         name: i + 1,
+        //         id: i
+        //     });
+        //     let source = points[i][0];
+        //     let target = points[i][1];
+        //     if (source !== target) {
+        //         edges.push({
+        //             source: source,
+        //             target: target
+        //         });
+        //     }
+        // }
+        let tooltip = {//提示框组件
+            trigger: 'item', //item数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。
+            axisPointer: {
+                // 坐标轴指示器，坐标轴触发有效
+                // type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+            },
+            formatter: '{b}{c}' //{a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）
+        }
+        point.setOption({
+
+            series: [
+                {
+                    // label: i,
+                    // focusNodeAdjacency: true,
+                    roam: true,
+                    data: data,
+                    edges: edges,
+                    tooltip: tooltip,
+                    itemStyle: {
+                        normal: {
+                            //     color: '#1890FF',
+                            //     label: {
+                            //         color: '#000', //字的颜色
+                            //         borderColor: '#A618FF',  //拐点边框颜色
+                            //         // show: true  //设置这个就会把值显示在图表上
+                            //     },
+                            lineStyle: {
+                                // color: '#9f07ff',
+                                width: 3
+                            }
+                        }
+                    },
+                }
+            ]
+        })
+        var count_for_click = 0;
+        var empty_lists=0;
+        var color_count=0;
+        let button1 = document.getElementById('button1');
+        let button2 = document.getElementById('button2');
+        let button3 = document.getElementById('button3');
+
+        String.prototype.format = function(opts) {//use 'my name is ${name}'.format({name:'lake'})
+            var data = Array.prototype.slice.call(arguments, 0),
+                toString = Object.prototype.toString;
+            if (data.length) {
+                data = data.length == 1 ?
+                    (opts !== null && (/\[object Array\]|\[object Object\]/.test(toString.call(opts))) ? opts : data) : data;
+                return this.replace(/\$\{(.+?)\}/g, function(match, key) {
+                    var replacer = data[key];
+                    // chrome 下 typeof /a/ == 'function'
+
+                    if ('[object Function]' == toString.call(replacer)) {
+                        replacer = replacer(key);
+                    }
+                    return ('undefined' == typeof replacer ? '' : replacer);
+                });
+            }
+            return this;
+        }//format方法的定义
+        // let colors=[
+        // '#c25ec8','#fd925f','#f80000',
+        // '#fda15b','#f3e017','#ff7900',
+        // '#f95ba2','#3a7cdc','#7760dd',
+        // '#506fe3'];
+        // var i =0;
+        let flag=1;
+        var former = 0;
+        function setcolor(){
+            if(flag==0)
+            {
+                return ;
+            }
+            for (former;former<count_for_click;former++)
+            {
+                if(ids[former].length==0)
+                {
+                    // count_for_click++;
+                    // empty_lists++;
+                    former++;
+                    break;
+                }
+                data[former+1-empty_lists]['itemStyle']={
+                    normal: {
+                        color:'#3a7cdd',
+                        label: {
+                            color: '#000', //字的颜色
+                            // borderColor: '#52ff18',  //拐点边框颜色
+                            // show: true  //设置这个就会把值显示在图表上
+                        }
+                    }
+                };
+            }
+
+            for (count_for_click;count_for_click<ids.length;count_for_click++)
+            {
+
+                if(ids[count_for_click].length==0)
+                {
+                    count_for_click++;
+                    empty_lists++;
+                    break;
+                }
+                data[count_for_click+1-empty_lists]['itemStyle']={
+                    normal: {
+                        color:'#f80000',
+                        label: {
+                            color: '#000', //字的颜色
+                            // borderColor: '#52ff18',  //拐点边框颜色
+                            // show: true  //设置这个就会把值显示在图表上
+                        }
+                    }
+                };
+            }
+
+            if (count_for_click==ids.length)
+            {
+                flag=0;
+            }
+            point.setOption({
+
+                series: [
+                    {
+                        // label: i,
+                        // focusNodeAdjacency: true,
+                        roam: true,
+                        data: data,
+                        edges: edges,
+                        tooltip: tooltip,
+                        itemStyle: {
+                            normal: {
+                                //     color: '#1890FF',
+                                //     label: {
+                                //         color: '#000', //字的颜色
+                                //         borderColor: '#A618FF',  //拐点边框颜色
+                                //         // show: true  //设置这个就会把值显示在图表上
+                                //     },
+                                lineStyle: {
+                                    // color: '#9f07ff',
+                                    width: 3
+                                }
+                            }
+                        },
+                    }
+                ]
+            })
+        };
+
+        button1.addEventListener("click", setcolor);
+        var v=0;
+        button2.addEventListener("click", function () {
+            v= window.setInterval('setcolor()',1000);
+
+        });
+        button3.addEventListener('click',function ()
+        {
+            window.clearInterval(v);
+        });
+
+    </script>
+{% endblock %}

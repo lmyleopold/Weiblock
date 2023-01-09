@@ -1,0 +1,54 @@
+
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <style>
+        .carousel {
+            height: 100vh;
+        }
+        .carousel-inner, .carousel-item {
+            height:100%;
+        }
+        .carousel-item {
+            background-color: rgba(255,255,255,0.5);
+        }
+        .carousel-item img {
+            height:calc(100% - 200px); object-fit: cover; object-position: center;
+        }
+    </style>
+    <div class="col p-0">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://s1.ax1x.com/2022/05/19/OqrJA0.png" class="d-block w-100" alt="...">
+                    <div class="row d-flex p-5" style="height: 200px">
+                        <h1 class="h1">Weiblock</h1>
+                        <p class="h4 text-muted">基于大数据和神经网络的微博恶意信息鉴别,阻断和溯源一体化系统。</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://s1.ax1x.com/2022/05/19/OqynyQ.png" class="d-block w-100" alt="...">
+                    <div class="row d-flex p-5" style="height: 200px">
+                        <h1 class="h1">Weiblock</h1>
+                        <p class="h4 text-muted">基于大数据和神经网络的微博恶意信息鉴别,阻断和溯源一体化系统。</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://s1.ax1x.com/2022/05/19/OqrJA0.png" class="d-block w-100" alt="...">
+                    <div class="row d-flex p-5" style="height: 200px">
+                        <h1 class="h1">Weiblock</h1>
+                        <p class="h4 text-muted">基于大数据和神经网络的微博恶意信息鉴别,阻断和溯源一体化系统。</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+{% endblock %}

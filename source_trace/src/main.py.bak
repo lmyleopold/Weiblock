@@ -1,0 +1,96 @@
+class AccountPool(Object):
+    def __init__(self):
+        self.__cookies = []
+        self.__it = 0
+
+    def __init__(self, cookies):
+        self.__cookies = cookies
+
+    def add_cookie(self, cookie):
+        self.__cookies.append(cookie)
+
+    def get_cookie(self):
+        ret = self.__cookies[self.__it]
+        self.__it += 1
+        if self.__it >= len(self.__cookies):
+            throw Exception("No more cookies")
+        return ret
+
+import requests
+import re
+from lxml import etree
+class Parser(Object):
+    def __init__(self):
+        self.__type = None
+        self.__url = None
+
+    def __init__(self,type):
+        self.__type = type
+        self.__url = None
+
+    def __init__(self,url):
+
+        pass
+
+    def parse(self):
+        res = get_res(url)
+        if self.__type == "topic":
+            return self.parse_topic(res)
+        elif self.__type == "user":
+            return self.parse_user(res)
+        elif self.__type == "parse_keyword":
+            return self.parse_keyword(res)
+        else:
+            return None
+
+    def parse_topic(self, html):
+#         print(html.text)
+        # with open('test.txt', 'w+', encoding='utf-8') as file:
+        #     file.write(res.text)
+        next_url = None
+        html = etree.HTML(html.text)
+        data = html.xpath('//*[@id="pl_feedlist_index"]/div[4]/div[1]/div[2]/div[1]/div[2]/p[2]/text()')
+        return data, next_url
+
+    def parse_user(self, html):
+        print(html.text)
+
+    def parse_keyword(self, html):
+        print(html.text)
+
+class Crawler(Object):
+    def __init__(self, account_pool):
+        self.__account_pool = account_pool
+        self.__waiting_queue = Queue()
+
+    def add_page(self, url):
+        pass
+
+    def add_account(self, account):
+        self.__account_pool.add_cookie(account)
+
+    def add_topic(self, topic, page):
+        # 话题需要加上%23才能搜索
+        add_page('https://s.weibo.com/weibo?q=%23' + topic + '%23&page=' + str(i))
+
+    def start(self):
+        account = self.__account_pool.get_cookie()
+        while True:
+            url = self.__waiting_queue.get()
+            if url is None:
+                break
+            Parser(url).parse()
+            page, nxt_url = self.parse(url)
+            print(page)
+            for url in page.get_urls():
+                self.__waiting_queue.put(url)
+            sleep(1)
+
+if __name__ == "__main__":
+    account_pool = [
+        # li_xinyang
+        "SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5NSkNLqgONq9X2AFplTF2U5JpX5KzhUgL.Fo-pe0nRSh5XeKz2dJLoI7DjIHvRIg44qg4r; SINAGLOBAL=250399977033.21326.1642248696644; ULV=1648127589714:8:6:1:930142405336.2251.1648127589532:1647678429034; ALF=1679939664; SUB=_2A25PRNSADeRhGeNP6FoZ9C7Iyj6IHXVsMEFIrDV8PUNbmtAKLVf8kW9NSbWLCWNtVG0PUY0Kw18VQ49xy02iKiGL; XSRF-TOKEN=x-GGd8fYtLiED2ZspRKXajol; _s_tentry=weibo.com; Apache=930142405336.2251.1648127589532; login_sid_t=4738b28fa13e2cdddda881810bde3d6b; cross_origin_proto=SSL; SSOLoginState=1647678089; WBPSESS=2bh1_9aErW2ebTbocgVd3Bx7lTQmOCX0h7oqRUyVpqF11sR8vlhznoMLlYSQWeTF6iZGRGrRTRQRCihMTUI-zVDnT-h_IavR7a6p4y_AGb9QLx8Yb6AuzsSp6w1MVU_jPxc5iSWbzK5c0UL13czQ1w==",
+    ]
+    crawler = Crawler(account_pool)
+    crawler.add_topic('mbti', 1)
+    crawler.start()

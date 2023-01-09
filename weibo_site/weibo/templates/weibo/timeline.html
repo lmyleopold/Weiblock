@@ -1,0 +1,92 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+    <div id="main" class="col d-flex justify-content-center">
+        <div id="timeline" class="my-auto p-3 shadow-lg" style="width: 1500px; height: 800px; background-color: rgba(255,255,255,0.8)">
+        </div>
+    </div>
+
+
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+
+    <script>
+
+        let timeline = echarts.init(document.getElementById('timeline'));
+        let heat = {{heat|safe}};
+        let comments = {{comments|safe}};
+        let data = [];
+        for(each of heat)
+        {
+            let now = new Date((each[0]));
+            data.push([+now, each[1]]);
+        }
+        let datas = [];
+        for (each of comments)
+        {
+            let now = new Date((each[0]));
+            datas.push([+now, each[1]]);
+        }
+        let option={
+            tooltip: {
+                trigger: 'axis',
+                position: function (pt) {
+                    return [pt[0], '10%'];
+                }
+            },
+            title: {
+                left: 'center',
+                text: '话题热度随时间变化图'
+            },
+            toolbox: {
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'time',
+                boundaryGap: false
+            },
+            yAxis: {
+                type: 'value',
+            },
+            dataZoom: [
+                {
+                    type: 'inside',
+                    start: 0,
+                    end: 20
+                },
+                {
+                    start: 0,
+                    end: 20
+                }
+            ],
+            series: [
+                {
+                    name: '热度',
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    areaStyle: {},
+                    data: data,
+                },
+                {
+                    name: '微博id',
+                    type: 'scatter',
+                    smooth: true,
+                    symbol: 'none',
+                    symbolsize:20,
+                    areaStyle: {},
+                    data: datas,
+                }
+            ],
+        };
+        timeline.setOption(option);
+    </script>
+{% endblock %}
